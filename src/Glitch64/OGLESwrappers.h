@@ -1,3 +1,6 @@
+#include "../Glide64/settings.h"
+extern SETTINGS settings;
+
 void vbo_draw();
 
 static GLenum cached_ActiveTexture_texture;
@@ -319,7 +322,21 @@ void inline cache_glScissor (GLint x, GLint y, GLsizei width, GLsizei height)
   if(x != cached_Scissor_x || y != cached_Scissor_y || width != cached_Scissor_width || height != cached_Scissor_height)
   {
     vbo_draw();
-    glScissor(x, y, width, height);
+    if(settings.rotate == 3)
+    {
+        if(x == 0 && y == 0)
+        {
+            glScissor((float)y * ((float)settings.scr_res_x / (float)settings.scr_res_y), (float)x * ((float)settings.scr_res_y / (float)settings.scr_res_x), height * (float)settings.scr_res_x / (float)settings.scr_res_y, width * (float)settings.scr_res_y / (float)settings.scr_res_x);
+        }
+        else
+        {
+            glScissor((float)y * ((float)settings.scr_res_x / (float)settings.scr_res_y), ((float)settings.scr_res_x - width - (float)x) * ((float)settings.scr_res_y / (float)settings.scr_res_x), height * (float)settings.scr_res_x / (float)settings.scr_res_y, width * (float)settings.scr_res_y / (float)settings.scr_res_x);
+        }
+    }
+    else // TODO
+    {
+        glScissor(x, y, width, height);
+    }
     cached_Scissor_x = x;
     cached_Scissor_y = y;
     cached_Scissor_width = width;
@@ -349,7 +366,21 @@ void inline cache_glViewport (GLint x, GLint y, GLsizei width, GLsizei height)
   if(x != cached_Viewport_x || y != cached_Viewport_y || width != cached_Viewport_width || height != cached_Viewport_height)
   {
     vbo_draw();
-    glViewport(x, y, width, height);
+    if(settings.rotate == 3)
+    {
+        if(x == 0 && y == 0)
+        {
+            glViewport((float)y * ((float)settings.scr_res_x / (float)settings.scr_res_y), (float)x * ((float)settings.scr_res_y / (float)settings.scr_res_x), height * (float)settings.scr_res_x / (float)settings.scr_res_y, width * (float)settings.scr_res_y / (float)settings.scr_res_x);
+        }
+        else
+        {
+            glViewport((float)y * ((float)settings.scr_res_x / (float)settings.scr_res_y), ((float)settings.scr_res_x - width - (float)x) * ((float)settings.scr_res_y / (float)settings.scr_res_x), height * (float)settings.scr_res_x / (float)settings.scr_res_y, width * (float)settings.scr_res_y / (float)settings.scr_res_x);
+        }
+    }
+    else // TODO
+    {
+        glViewport(x, y, width, height);
+    }
     cached_Viewport_x = x;
     cached_Viewport_y = y;
     cached_Viewport_width = width;
